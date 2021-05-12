@@ -28,7 +28,7 @@ Vagrant.configure(2) do |config|
       main.vm.provision :shell, privileged: true, inline: "rm -f /var/sync/token"
       main.vm.provision :shell, privileged: true, inline: "rm -f /var/sync/server"
       main.vm.provision :shell, privileged: true, inline: "cat /var/lib/rancher/rke2/server/node-token > /var/sync/token" 
-      main.vm.provision :shell, privileged: true, inline: "hostname -I > /var/sync/server"    
+      main.vm.provision :shell, privileged: true, inline: "hostname -I | xargs > /var/sync/server"    
       main.vm.provision :shell, privileged: true, inline: "cat /etc/rancher/rke2/rke2.yaml > /var/sync/kubeconfig" 
     end
   
