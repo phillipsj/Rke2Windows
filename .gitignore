@@ -1,3 +1,4 @@
 .vagrant
 token
 server
+kubeconfig
