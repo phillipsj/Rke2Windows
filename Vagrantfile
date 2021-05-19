@@ -28,7 +28,8 @@ Vagrant.configure(2) do |config|
         vb.cpus = 2
       end
       linuxworker.vm.provider :hyperv do |hv|
-        hv.memory = 4096
+        hv.linked_clone = true
+        hv.memory = 4096        
         hv.cpus = 2
       end
 
@@ -45,14 +46,18 @@ Vagrant.configure(2) do |config|
         vb.cpus = 2
         vb.gui = true
       end 
-      winworker.vm.provider :hyperv do |hv|
-        hv.enable_virtualization_extensions = true      
+      winworker.vm.provider :hyperv do |hv, override|  
+        hv.linked_clone = true  
         hv.memory = 4096
         hv.cpus = 2
+        override.vm.boot_timeout = 600
       end
-  
+     
       winworker.vm.synced_folder "./sync", "c:\\sync", smb_username: ENV['SMB_USERNAME'], smb_password: ENV['SMB_PASSWORD']
-  
+      winworker.vm.provision :shell, privileged: true, path: "winworker.ps1"
+      #winworker.vm.provision :reload
+      #winworker.vm.provision :shell, privileged: true, path: "winworker.ps1"
+
     end
     
   end
