@@ -24,11 +24,6 @@ Write-Host "Generating Kube Config...."
 New-Item -ItemType Directory -Path $kubernetesPath\etc -Force > Out-Null
 (Get-Content -Path C:\sync\config).Replace("127.0.0.1", $serverIp) | Set-Content -Path $kubernetesPath\config
 
-# Get Containerd and CNI
-# TODO: Handle config.toml stuff
-New-Item -ItemType Directory -Path $env:ProgramFiles\containerd -Force > Out-Null
-Invoke-Curl -Uri https://github.com/nickgerace/vista/blob/main/config.toml -OutFile $env:ProgramFiles\containerd\config.toml
-
 Install-Containerd
 Install-CNI
 
@@ -54,6 +49,12 @@ Get-Calico -ServiceCidr $serviceCidr -DNSServerIPs $dnsServers
 # Starting Kubelet
 Write-Host "Starting Kube services...."
 c:\CalicoWindows\kubernetes\install-kube-services.ps1
+
+Start-Service kubelet
+while ((Get-Service kubelet).Status -ne 'Running') { Start-Sleep -s 2 }
+
+Start-Service "kube-proxy"
+while ((Get-Service "kube-proxy").Status -ne 'Running') { Start-Sleep -s 2 }
 
 # Configure Calico
 Write-Host "Configuring Calico...."
