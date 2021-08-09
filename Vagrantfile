@@ -1,5 +1,4 @@
 Vagrant.configure(2) do |config|
-    config.vagrant.plugins = ["vagrant-reload"]
     config.vm.network "private_network", bridge: "Default Switch"
     config.vm.define :main do |main|
       main.vm.host_name = "main"
@@ -33,14 +32,13 @@ Vagrant.configure(2) do |config|
         hv.cpus = 2
       end
 
-      linuxworker.vm.synced_folder "./sync", "/var/sync", smb_username: ENV['SMB_USERNAME'], smb_password: ENV['SMB_PASSWORD']     
-     
+      linuxworker.vm.synced_folder "./sync", "/var/sync", smb_username: ENV['SMB_USERNAME'], smb_password: ENV['SMB_PASSWORD']
       linuxworker.vm.provision :shell, privileged: true, path: "linuxworker.sh"
     end
 
     config.vm.define :winworker do |winworker|
       winworker.vm.host_name = "winworker"
-      winworker.vm.box = "StefanScherer/windows_2019"     
+      winworker.vm.box = "StefanScherer/windows_2019"
       winworker.vm.provider :virtualbox do |vb|
         vb.memory = 4096
         vb.cpus = 2
@@ -53,11 +51,8 @@ Vagrant.configure(2) do |config|
         override.vm.boot_timeout = 600
       end
      
-      winworker.vm.synced_folder "./sync", "c:\\sync", smb_username: ENV['SMB_USERNAME'], smb_password: ENV['SMB_PASSWORD']
+      winworker.vm.synced_folder "./sync", "C:/sync", smb_username: ENV['SMB_USERNAME'], smb_password: ENV['SMB_PASSWORD']
       winworker.vm.provision :shell, privileged: true, path: "winworker.ps1"
-      #winworker.vm.provision :reload
-      #winworker.vm.provision :shell, privileged: true, path: "winworker.ps1"
-
     end
     
   end
