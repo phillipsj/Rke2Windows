@@ -38,7 +38,7 @@ Vagrant.configure(2) do |config|
 
     config.vm.define :winworker do |winworker|
       winworker.vm.host_name = "winworker"
-      winworker.vm.box = "StefanScherer/windows_2019"
+      winworker.vm.box = "StefanScherer/windows_2019_docker"
       winworker.vm.provider :virtualbox do |vb|
         vb.memory = 4096
         vb.cpus = 2
